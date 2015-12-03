@@ -14,6 +14,7 @@
 package utl
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"strconv"
@@ -220,4 +221,17 @@ func Int2HexStr(num int) (hex string) {
 		num = num / 16
 	}
 	return hex
+}
+
+func ToJsonString(v interface{}) (string, error) {
+	d, e := json.Marshal(v)
+	if e != nil {
+		return "", e
+	}
+	return string(d), e
+}
+
+func MustToJsonString(v interface{}) string {
+	s, _ := ToJsonString(v)
+	return s
 }
