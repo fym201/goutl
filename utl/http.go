@@ -42,7 +42,7 @@ func (e *RemoteError) Error() string {
 	return e.Err.Error()
 }
 
-var UserAgent = "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/29.0.1541.0 Safari/537.36"
+var userAgent = "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/29.0.1541.0 Safari/537.36"
 
 // HttpCall makes HTTP method call.
 func HttpCall(client *http.Client, method, url string, header http.Header, body io.Reader) (io.ReadCloser, error) {
@@ -50,7 +50,7 @@ func HttpCall(client *http.Client, method, url string, header http.Header, body 
 	if err != nil {
 		return nil, err
 	}
-	req.Header.Set("User-Agent", UserAgent)
+	req.Header.Set("User-Agent", userAgent)
 	for k, vs := range header {
 		req.Header[k] = vs
 	}
