@@ -18,6 +18,8 @@ import (
 	"errors"
 	"fmt"
 	"strconv"
+	"time"
+	"reflect"
 )
 
 // Convert string to specify type.
@@ -169,6 +171,74 @@ func MustToInt(value interface{}) int64 {
 	return v
 }
 
+func ToFloat(value interface{}) (float64, error) {
+	var ret float64 = 0
+	switch v := value.(type) {
+	case bool:
+		if true {
+			ret = 1
+		}
+	case float32:
+		ret = float64(v)
+	case float64:
+		ret = v
+	case int:
+		ret = float64(v)
+	case int8:
+		ret = float64(v)
+	case int16:
+		ret = float64(v)
+	case int32:
+		ret = float64(v)
+	case int64:
+		ret = float64(v)
+	case uint:
+		ret = float64(v)
+	case uint8:
+		ret = float64(v)
+	case uint16:
+		ret = float64(v)
+	case uint32:
+		ret = float64(v)
+	case uint64:
+		ret = float64(v)
+	case string:
+		ret, _ = strconv.ParseFloat(v, 64)
+	default:
+		return 0, errors.New("Can not convert to int")
+	}
+	return ret, nil
+}
+
+func ToBool(value interface{}) (bool, error) {
+
+	switch v := value.(type) {
+	case bool:
+		return v,nil
+	case float32, float64,int,int8,int16,int32,int64,uint,uint8,uint16,uint32,uint64:
+		return v != 0, nil
+	case string:
+		return v != "",nil
+	default:
+		vv := reflect.ValueOf(value)
+		tp := vv.Type().Kind()
+		if tp == reflect.Ptr || tp == reflect.Map || tp == reflect.Slice {
+			return !vv.IsNil(),nil
+		}
+	}
+	return false, errors.New(fmt.Sprintf("Can not convert %v to bool", value))
+}
+
+func MustToBool(value interface{}) bool {
+	v, _ := ToBool(value)
+	return v
+}
+
+func MustToFloat(value interface{}) float64 {
+	v, _ := ToFloat(value)
+	return v
+}
+
 type argInt []int
 
 func (a argInt) Get(i int, args ...int) (r int) {
@@ -235,3 +305,39 @@ func MustToJsonString(v interface{}) string {
 	s, _ := ToJsonString(v)
 	return s
 }
+
+//Convert millisecond time stamp or date time string to time.Time
+func ToTime(value interface{}) (time.Time, error)  {
+	var timestamp int64 = 0
+	switch v := value.(type) {
+	case time.Time:
+		return v, nil
+	case int:
+		timestamp = int64(v)
+	case int32:
+		timestamp = int64(v)
+	case int64:
+		timestamp = v
+	case uint:
+		timestamp = int64(v)
+	case uint32:
+		timestamp = int64(v)
+	case uint64:
+		timestamp = int64(v)
+	case string:
+		return time.Parse(time.RFC3339Nano, v)
+	default:
+		return time.Unix(0,0), errors.New("Can not convert to time")
+	}
+
+	sec := int64(timestamp/1000)
+	msec := timestamp - sec
+	return time.Unix(sec, msec * int64(time.Millisecond)), nil
+
+}
+
+func MustToTime(val interface{}) time.Time {
+	t, _ := ToTime(val)
+	return t
+}
+
