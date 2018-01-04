@@ -103,6 +103,48 @@ func (f Str) String() string {
 	return ""
 }
 
+type StrArr []string
+
+func (sa StrArr) MustIntArr() []int {
+	ret := make([]int, len(sa))
+	for i, v := range sa {
+		ret[i] = Str(v).MustInt()
+	}
+	return ret
+}
+
+func (sa StrArr) MustInt64Arr() []int64 {
+	ret := make([]int64, len(sa))
+	for i, v := range sa {
+		ret[i] = Str(v).MustInt64()
+	}
+	return ret
+}
+
+func (sa StrArr) MustUIntArr() []uint {
+	ret := make([]uint, len(sa))
+	for i, v := range sa {
+		ret[i] = Str(v).MustUInt()
+	}
+	return ret
+}
+
+func (sa StrArr) MustFloat32Arr() []float32 {
+	ret := make([]float32, len(sa))
+	for i, v := range sa {
+		ret[i] = Str(v).MustFloat32()
+	}
+	return ret
+}
+
+func (sa StrArr) MustFloat64Arr() []float64 {
+	ret := make([]float64, len(sa))
+	for i, v := range sa {
+		ret[i] = Str(v).MustFloat64()
+	}
+	return ret
+}
+
 // Convert any type to string.
 func ToStr(value interface{}, args ...int) (s string) {
 	switch v := value.(type) {
