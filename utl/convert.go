@@ -60,6 +60,13 @@ func (f Str) MustUint8() uint8 {
 }
 
 func (f Str) MustBool() bool {
+	bf := strings.ToLower(f)
+	if bf == "true" {
+		return true
+	} else if bf == "false" {
+		return false
+	}
+
 	v, _ := f.Uint8()
 	return v > 0
 }
