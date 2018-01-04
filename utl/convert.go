@@ -59,9 +59,19 @@ func (f Str) MustUint8() uint8 {
 	return v
 }
 
+func (f Str) MustBool() bool {
+	v, _ := f.Uint8()
+	return v > 0
+}
+
 func (f Str) MustInt() int {
 	v, _ := f.Int()
 	return v
+}
+
+func (f Str) MustUInt() uint {
+	v, _ := f.Int64()
+	return uint(v)
 }
 
 func (f Str) MustInt64() int64 {
