@@ -20,6 +20,7 @@ import (
 	"strconv"
 	"time"
 	"reflect"
+	"strings"
 )
 
 // Convert string to specify type.
@@ -60,7 +61,7 @@ func (f Str) MustUint8() uint8 {
 }
 
 func (f Str) MustBool() bool {
-	bf := strings.ToLower(f)
+	bf := strings.ToLower(f.String())
 	if bf == "true" {
 		return true
 	} else if bf == "false" {
