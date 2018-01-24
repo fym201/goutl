@@ -17,6 +17,7 @@ package utl
 import (
 	"strconv"
 	"strings"
+	"reflect"
 )
 
 // AppendStr appends string to slice with no duplicates.
@@ -96,6 +97,22 @@ func IsSliceContainsInt(sl []int, i int) bool {
 	return false
 }
 
+func IsSliceContainsItem(slice interface{}, item interface{}) bool {
+	switch reflect.TypeOf(slice).Kind() {
+	case reflect.Slice:
+		s := reflect.ValueOf(slice)
+		for i := 0; i < s.Len(); i++ {
+			if s.Index(i).Interface() == item {
+				return true
+			}
+		}
+	default:
+		return false
+	}
+
+	return false
+}
+
 func StringSliceToInt64Slice(sl []string) []int64 {
 	var ret []int64
 	for _, v := range sl {
@@ -112,3 +129,4 @@ func Int64SliceToStringSlice(sl []int64) []string {
 	}
 	return ret
 }
+
