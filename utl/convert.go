@@ -31,16 +31,28 @@ func (f Str) Exist() bool {
 }
 
 func (f Str) Uint8() (uint8, error) {
+	if strings.LastIndex(string(f), ".") != -1 {
+		ff, err := f.Float32()
+		return uint8(ff), err
+	}
 	v, err := strconv.ParseUint(f.String(), 10, 8)
 	return uint8(v), err
 }
 
 func (f Str) Int() (int, error) {
+	if strings.LastIndex(string(f), ".") != -1 {
+		ff, err := f.Float32()
+		return int(ff), err
+	}
 	v, err := strconv.ParseInt(f.String(), 10, 32)
 	return int(v), err
 }
 
 func (f Str) Int64() (int64, error) {
+	if strings.LastIndex(string(f), ".") != -1 {
+		ff, err := f.Float32()
+		return int64(ff), err
+	}
 	v, err := strconv.ParseInt(f.String(), 10, 64)
 	return int64(v), err
 }
@@ -274,16 +286,16 @@ func ToBool(value interface{}) (bool, error) {
 
 	switch v := value.(type) {
 	case bool:
-		return v,nil
-	case float32, float64,int,int8,int16,int32,int64,uint,uint8,uint16,uint32,uint64:
+		return v, nil
+	case float32, float64, int, int8, int16, int32, int64, uint, uint8, uint16, uint32, uint64:
 		return v != 0, nil
 	case string:
-		return v != "",nil
+		return v != "", nil
 	default:
 		vv := reflect.ValueOf(value)
 		tp := vv.Type().Kind()
 		if tp == reflect.Ptr || tp == reflect.Map || tp == reflect.Slice {
-			return !vv.IsNil(),nil
+			return !vv.IsNil(), nil
 		}
 	}
 	return false, errors.New(fmt.Sprintf("Can not convert %v to bool", value))
@@ -367,7 +379,7 @@ func MustToJsonString(v interface{}) string {
 }
 
 //Convert millisecond time stamp or date time string to time.Time
-func ToTime(value interface{}) (time.Time, error)  {
+func ToTime(value interface{}) (time.Time, error) {
 	var timestamp int64 = 0
 	switch v := value.(type) {
 	case time.Time:
@@ -387,12 +399,12 @@ func ToTime(value interface{}) (time.Time, error)  {
 	case string:
 		return time.Parse(time.RFC3339Nano, v)
 	default:
-		return time.Unix(0,0), errors.New("Can not convert to time")
+		return time.Unix(0, 0), errors.New("Can not convert to time")
 	}
 
-	sec := int64(timestamp/1000)
+	sec := int64(timestamp / 1000)
 	msec := timestamp - sec
-	return time.Unix(sec, msec * int64(time.Millisecond)), nil
+	return time.Unix(sec, msec*int64(time.Millisecond)), nil
 
 }
 
@@ -400,4 +412,3 @@ func MustToTime(val interface{}) time.Time {
 	t, _ := ToTime(val)
 	return t
 }
-
