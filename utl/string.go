@@ -24,6 +24,8 @@ import (
 	"strconv"
 	"strings"
 	"time"
+	"crypto/md5"
+	"fmt"
 )
 
 // AESEncrypt encrypts text and given key with AES.
@@ -136,4 +138,15 @@ func RandomCreateBytes(n int, alphabets ...byte) []byte {
 		}
 	}
 	return bytes
+}
+
+func MD5(data []byte) string {
+	has := md5.Sum(data)
+	return fmt.Sprintf("%x", has)
+}
+
+func StringMD5(str string) string {
+	w := md5.New()
+	io.WriteString(w, str)
+	return fmt.Sprintf("%x", w.Sum(nil))
 }

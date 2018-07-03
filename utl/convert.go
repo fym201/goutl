@@ -365,6 +365,19 @@ func Int2HexStr(num int) (hex string) {
 	return hex
 }
 
+func ToJson(v interface{}) ([]byte, error) {
+	d, e := json.Marshal(v)
+	if e != nil {
+		return nil, e
+	}
+	return d, e
+}
+
+func MustToJson(v interface{}) []byte {
+	d, _ := ToJson(v)
+	return d
+}
+
 func ToJsonString(v interface{}) (string, error) {
 	d, e := json.Marshal(v)
 	if e != nil {
