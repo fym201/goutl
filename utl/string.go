@@ -26,6 +26,8 @@ import (
 	"time"
 	"crypto/md5"
 	"fmt"
+	"crypto/hmac"
+	"crypto/sha1"
 )
 
 // AESEncrypt encrypts text and given key with AES.
@@ -149,4 +151,11 @@ func StringMD5(str string) string {
 	w := md5.New()
 	io.WriteString(w, str)
 	return fmt.Sprintf("%x", w.Sum(nil))
+}
+
+func HMacHash1(data []byte, key string) string {
+	mac := hmac.New(sha1.New, []byte(key))
+	mac.Write(data)
+
+	return fmt.Sprintf("%x", mac.Sum(nil))
 }
