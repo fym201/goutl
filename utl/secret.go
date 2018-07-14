@@ -58,3 +58,50 @@ func AesMustDecrypt(cryptedStr string, secretKey string) []byte {
 	ret, _ := AesDecrypt(cryptedStr, secretKey)
 	return ret
 }
+
+type AesCryptPKCS5 struct {
+	key []byte
+	iv  []byte
+}
+
+func NewAesCryptPKCS5(key, iv []byte) *AesCryptPKCS5 {
+	return &AesCryptPKCS5{key:key, iv:iv}
+}
+
+func (a *AesCryptPKCS5) Encrypt(data []byte) ([]byte, error) {
+	aesBlockEncrypt, err := aes.NewCipher(a.key)
+	content := PKCS5Padding(data, aesBlockEncrypt.BlockSize())
+	encrypted := make([]byte, len(content))
+	if err != nil {
+		println(err.Error())
+		return nil, err
+	}
+	aesEncrypt := cipher.NewCBCEncrypter(aesBlockEncrypt, a.iv)
+	aesEncrypt.CryptBlocks(encrypted, content)
+	return encrypted, nil
+}
+
+func (a *AesCryptPKCS5) Decrypt(src []byte) (data []byte, err error) {
+	decrypted := make([]byte, len(src))
+	var aesBlockDecrypt cipher.Block
+	aesBlockDecrypt, err = aes.NewCipher(a.key)
+	if err != nil {
+		println(err.Error())
+		return nil, err
+	}
+	aesDecrypt := cipher.NewCBCDecrypter(aesBlockDecrypt, a.iv)
+	aesDecrypt.CryptBlocks(decrypted, src)
+	return PKCS5Trimming(decrypted), nil
+}
+
+
+func PKCS5Padding(cipherText []byte, blockSize int) []byte {
+	padding := blockSize - len(cipherText)%blockSize
+	padText := bytes.Repeat([]byte{byte(padding)}, padding)
+	return append(cipherText, padText...)
+}
+
+func PKCS5Trimming(encrypt []byte) []byte {
+	padding := encrypt[len(encrypt)-1]
+	return encrypt[:len(encrypt)-int(padding)]
+}
