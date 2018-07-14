@@ -159,3 +159,4 @@ func HMacHash1(data []byte, key string) string {
 
 	return fmt.Sprintf("%x", mac.Sum(nil))
 }
+
