@@ -99,6 +99,11 @@ func (f Str) MustInt64() int64 {
 	return v
 }
 
+func (f Str) MustUint64() uint64 {
+	v, _ := strconv.ParseUint(string(f), 10, 64)
+	return v
+}
+
 func (f Str) MustFloat32() float32 {
 	v, _ := f.Float32()
 	return v
