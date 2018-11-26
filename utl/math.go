@@ -89,6 +89,7 @@ func GetSumNum(keys []float64, kill float64) []float64 {
 		if in == kill {
 			return ls
 		} else if in > inNear && in < kill {
+			inNear = in
 			near = ls
 		}
 	}
