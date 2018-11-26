@@ -62,3 +62,35 @@ func RoundCeil(f float64, n int) float64 {
 	pow10_n := math.Pow10(n)
 	return math.Trunc((f+0.5/pow10_n)*pow10_n) / pow10_n
 }
+
+//给定一个数组和数字，获取数组内若干个元素使得其和等于或最接近于给定数字
+func GetSumNum(keys []float64, kill float64) []float64 {
+	for _, i := range keys {
+		if i == kill {
+			return []float64{i}
+		}
+	}
+
+	ln := len(keys)
+	nbit := 1 << uint64(ln)
+
+	var inNear float64 //最接近的数
+	var near []float64 //最接近的数对应列表
+	for i := 0; i < nbit; i++ {
+		var in float64
+		var ls []float64
+		for j := 0; j < ln; j++ {
+			tmp := 1 << uint64(j) // 由0到n右移位
+			if tmp&i != 0 { // 与运算，同为1时才会是1
+				in += keys[j]
+				ls = append(ls, keys[j])
+			}
+		}
+		if in == kill {
+			return ls
+		} else if in > inNear && in < kill {
+			near = ls
+		}
+	}
+	return near
+}
