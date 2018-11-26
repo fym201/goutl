@@ -14,6 +14,8 @@
 
 package utl
 
+import "math"
+
 // PowInt is int type of math.Pow function.
 func PowInt(x int, y int) int {
 	num := 1
