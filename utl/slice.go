@@ -132,7 +132,7 @@ func StringSliceToInt64Slice(sl []string) []int64 {
 }
 
 func StringSliceToUint64Slice(sl []string) []uint64 {
-	var ret []int64
+	var ret []uint64
 	for _, v := range sl {
 		i, _ := strconv.ParseInt(v, 10, 64)
 		ret = append(ret, uint64(i))
